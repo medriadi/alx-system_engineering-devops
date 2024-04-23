@@ -1,6 +1,5 @@
-#install specific version of flask
-
-package{'flask':
-ensure   => '2.1.0',
-provider => 'pip'
+# install flask from pip3
+package { 'flask':
+  ensure   => '2.1.0',
+  provider => 'pip3',
 }
