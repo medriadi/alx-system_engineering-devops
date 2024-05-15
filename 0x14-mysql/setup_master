@@ -1,5 +1,3 @@
-Here's a version of the instructions for setting up the MySQL primary (master) server:
-
 **Primary (Master) Server Setup**
 
 1. **Open the MySQL configuration file for editing:**

@@ -1,4 +1,3 @@
-```markdown
 # 0x14 MySQL
 
 This project demonstrates the creation of MySQL users, granting privileges, and setting up replication. The SQL script is divided into three tasks, each with its own set of comments explaining the purpose and functionality of the SQL statements.
@@ -87,5 +86,3 @@ By executing this SQL script, you will create two MySQL user accounts ('holberto
 - [MySQL User Account Management](https://dev.mysql.com/doc/refman/8.0/en/user-account-management.html)
 - [MySQL Replication](https://dev.mysql.com/doc/refman/8.0/en/replication.html)
 - [MySQL Privileges](https://dev.mysql.com/doc/refman/8.0/en/privileges-provided.html)
-
-```
