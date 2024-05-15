@@ -1,5 +1,4 @@
-#!/bin/bash
-
+ #!/usr/bin/env bash
 # Set the date for the backup filename
 backup_date=$(date +%d-%m-%Y)
 
