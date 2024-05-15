@@ -1,0 +1,67 @@
+Here's a version of the instructions for setting up the MySQL primary (master) server:
+
+**Primary (Master) Server Setup**
+
+1. **Open the MySQL configuration file for editing:**
+
+```
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+2. **Add the following lines to the `[mysqld]` section:**
+
+```
+server-id = 1
+log_bin = /var/log/mysql/mysql-bin.log
+binlog_do_db = tyrell_corp
+```
+
+- `server-id`: A unique identifier for the MySQL server instance (in this case, set to 1 for the primary server).
+- `log_bin`: Enables binary logging, which is required for replication.
+- `binlog_do_db`: Configures MySQL to only log updates for the specified database (in this case, `tyrell_corp`).
+
+3. **Save the changes and exit the text editor.**
+
+4. **Restart the MySQL service for the changes to take effect:**
+
+```
+sudo systemctl restart mysql
+```
+
+5. **Connect to the MySQL server as the root user:**
+
+```
+mysql -u root -p
+```
+
+6. **Create a user account for the replica to connect to the primary:**
+
+```sql
+CREATE USER 'replica_user'@'%' IDENTIFIED BY 'your_secure_password';
+GRANT REPLICATION SLAVE ON *.* TO 'replica_user'@'%';
+FLUSH PRIVILEGES;
+```
+
+Replace `'replica_user'` with the desired username and `'your_secure_password'` with a secure password.
+
+7. **Verify the primary server's binary log file name and position:**
+
+```sql
+SHOW MASTER STATUS;
+```
+
+Take note of the `File` and `Position` values, as you'll need them when configuring the replica.
+
+8. **Exit the MySQL prompt:**
+
+```sql
+EXIT;
+```
+
+9. **Secure the MySQL server:**
+
+On the `web-01` server, configure UFW to allow incoming connections on port 3306 (default MySQL port):
+
+```
+sudo ufw allow from replica_server_ip to any port 3306
+```

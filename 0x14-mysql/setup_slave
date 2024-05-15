@@ -1,0 +1,89 @@
+Sure, here's the updated instructions with the additional step to secure MySQL servers:
+
+1. **Open the MySQL configuration file for editing:**
+
+```
+sudo vim /etc/mysql/mysql.conf.d/mysqld.cnf
+```
+
+2. **Find the line `bind-address` and comment it out by adding `#` at the beginning of the line.** This allows the MySQL server to listen on all available network interfaces, which is necessary for replication.
+
+3. **Add the following lines to the `[mysqld]` section:**
+
+```
+server-id = 2
+log_bin = /var/log/mysql/mysql-bin.log
+relay_log = /var/log/mysql/mysql-relay-bin
+binlog_do_db = tyrell_corp
+```
+
+- `server-id`: A unique identifier for the MySQL server instance (in this case, set to 2 for the replica server).
+- `log_bin`: Enables binary logging, which is required for replication.
+- `relay_log`: Specifies the location of the relay log files used for replication.
+- `binlog_do_db`: Configures MySQL to only replicate the specified database (in this case, `tyrell_corp`).
+
+4. **Save the changes and exit the text editor.**
+
+5. **Restart the MySQL service for the changes to take effect:**
+
+```
+sudo systemctl restart mysql
+```
+
+6. **Connect to the MySQL server as the root user:**
+
+```
+mysql -u root -p
+```
+
+7. **Stop the replica thread if it's running:**
+
+```sql
+STOP SLAVE;
+```
+
+8. **Configure the replica to connect to the primary server:**
+
+```sql
+CHANGE MASTER TO
+    MASTER_HOST='primary_server_ip',
+    MASTER_USER='replica_user',
+    MASTER_PASSWORD='your_secure_password',
+    MASTER_LOG_FILE='mysql-bin.000001',
+    MASTER_LOG_POS=0;
+```
+
+- Replace `'primary_server_ip'` with the IP address of the primary server (web-01).
+- Replace `'replica_user'` with the username that the replica will use to connect to the primary.
+- Replace `'your_secure_password'` with the password for the `replica_user`.
+- `MASTER_LOG_FILE` and `MASTER_LOG_POS` specify the binary log file and position from which the replica should start replicating.
+
+9. **Start the replica thread:**
+
+```sql
+START SLAVE;
+```
+
+10. **Verify the replication status:**
+
+```sql
+SHOW SLAVE STATUS\G
+```
+
+Ensure that both `Slave_IO_Running` and `Slave_SQL_Running` are set to `Yes`.
+
+11. **Exit the MySQL prompt:**
+
+```sql
+EXIT;
+```
+
+12. **Secure MySQL servers:**
+
+On both `web-01` and `web-02`, configure UFW to allow incoming connections on port 3306 (default MySQL port):
+
+```
+sudo ufw allow 3306/tcp
+```
+
+This will allow incoming connections to the MySQL server from any source. If you want to restrict access to specific IP addresses or networks, you can modify the `ufw` rule accordingly.
