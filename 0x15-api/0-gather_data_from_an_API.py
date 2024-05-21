@@ -1,6 +1,18 @@
 #!/usr/bin/python3
 '''
-gather employee data from API
+Script to gather employee data and TODO list progress from an API.
+
+Usage:
+    python3 script.py <employee_id>
+
+Arguments:
+    <employee_id>: Integer ID of the employee whose TODO progress to fetch.
+
+API Endpoint:
+    https://jsonplaceholder.typicode.com
+
+Example:
+    python3 script.py 2
 '''
 
 import re
