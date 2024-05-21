@@ -1,7 +1,10 @@
 #!/usr/bin/python3
-'''
-gather employee data from API
-'''
+"""
+This script gathers employee data from an API.
+
+It takes an employee ID as a command-line argument and fetches
+the employee's name and completed tasks from the provided REST API.
+"""
 
 import re
 import requests
@@ -28,4 +31,3 @@ if __name__ == '__main__':
             if len(completed_tasks) > 0:
                 for task in completed_tasks:
                     print('\t {}'.format(task.get('title')))
-
